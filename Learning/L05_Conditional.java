@@ -26,13 +26,11 @@ public class L05_Conditional
         System.out.print("Enter the time in hours: ");
         int time = scanner.nextInt();
         
-
-        System.out.println((time < 18) ? "Good day." : "Good evening.");
         //& Ternary operator: (condition) ? value if true : value if false
 
         String message = (time < 12) ? "Good morning."
-                        : (time < 18) ? "Good day."
-                        : "Good evening.";
+                : (time >= 12 && time < 18) ? "Good day."
+                : "Good evening.";
         System.out.println(message);
 
 

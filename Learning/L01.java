@@ -44,7 +44,6 @@ public class L01 { // The name of the class(file)
         System.out.println("Array elements are: ");
 
         for(int i=0; i<arr.length; i++) { //& for loop to iterate through the array: for(initialization; condition; increment/decrement)
-
             System.out.println(arr[i]);
         }
 

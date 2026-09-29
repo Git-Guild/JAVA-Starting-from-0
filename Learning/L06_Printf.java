@@ -3,9 +3,9 @@
 public class L06_Printf {
     public static void main(String[] args) {
         
-        String name = "Mikky";
-        char firstLetter = 'M';
-        int age = 18;
+        String name = "Yuvraj";
+        char firstLetter = 'Y';
+        int age = 19;
         double cgpa = 8.4567;
         boolean isStudent = true;
 

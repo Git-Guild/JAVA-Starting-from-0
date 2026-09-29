@@ -39,8 +39,10 @@ public class L03_Operators {
         System.out.println(Math.floor(5.6));
         System.out.println(Math.ceil(5.6));
         System.out.println(Math.random());
-        int randomNum = (int) Math.random() * 101;
-        System.out.println(randomNum);
+        int randomNum = (int) Math.random() * 101; //& a double value from 0.0 to 1.0 but int makes it 0 only
+        int randomNum1 = (int) (Math.random() * 101); //& a double value from 0.0 to 1.0 but *101 makes it 0 to 100
+        System.out.println(randomNum); 
+        System.out.println(randomNum1);
 
     }
 }
