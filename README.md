@@ -33,6 +33,21 @@ This repository is organized into progressive learning modules:
 
 ---
 
+## ☕ Java 25 Tour
+
+Newer features (records, pattern matching, virtual threads, and the new
+zero-boilerplate style) live in [`Learning/Javac 25`](Learning/Javac%2025/README.md).
+Each file runs with a single command:
+
+```
+java Learning/Javac 25/Java25Tour.java
+```
+
+See that folder's [README](Learning/Javac%2025/README.md) for the suggested
+order, a Java 25 feature cheat-sheet, and fixes for common errors.
+
+---
+
 ## 🎯 Who Is This For?
 
 This repository is ideal for:
