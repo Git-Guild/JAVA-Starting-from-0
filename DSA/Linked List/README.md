@@ -1,0 +1,221 @@
+# Linked List
+
+A **linked list** is a data structure made of small chunks of memory called *nodes*. Each node stores a value and a link (`next` reference) to the following node. Unlike an array, the nodes do **not** sit next to each other in memory — they are stitched together by these links.
+
+```
+head
+ |
+ v
++------+    +------+    +------+    +------+
+|  5   | -> |  4   | -> |  3   | -> | NULL |
++------+    +------+    +------+    +------+
+  node        node        node        end
+```
+
+`head` is the only way in: it is a plain reference to the first node. `NULL` (printed at the end) marks where the list stops — the last node's `next` is `null`.
+
+## Why Do We Need Linked Lists?
+
+Arrays come first — and they are *good*. The linked list only earns its place where the array's memory shape breaks down. Walk the two array flavours below, watch each one hit a wall, and the answer writes itself.
+
+---
+
+### 1. The Array — one solid block
+
+Every element sits **next to its neighbour**, so the address of `a[i]` is pure arithmetic — no lookup, no walking:
+
+```
+   &a[i] = base + i × sizeof(int)      one multiplication  →  O(1)
+
+index:    0      1      2      3      4          base = 0x1000
+         +------+------+------+------+------+
+    a →  |  10  |  20  |  30  |  40  |  50  |
+         +------+------+------+------+------+
+addr:   0x1000 0x1004 0x1008 0x100C 0x1010
+         ▲ one contiguous block — no gaps
+```
+
+- **Fast:** jump straight to `a[3]`, and the CPU pre-fetches the neighbours too (cache-friendly).
+- **Wall #1 — inserting at the front shoves everything sideways:**
+
+```
+insert 5 at index 0                       elements moved: 5 4 3 2 1 0
+
+before   [10][20][30][40][50]
+                    └──── all slide right ────▶
+shift    [   ][10][20][30][40][50]
+after    [ 5 ][10][20][30][40][50]         O(n) — n moves for ONE insert
+```
+
+- **Wall #2 — the size is baked in:** `int[] a = new int[5];` can never hold a 6th number.
+
+---
+
+### 2. ArrayList — the array that learned to grow
+
+An **ArrayList** keeps two counters: `size` (what's used) and `capacity` (what's reserved), and over-allocates on purpose so appends rarely resize:
+
+```
+size = 3, capacity = 8
+
+index:  0     1     2     3     4     5     6     7
+      +-----+-----+-----+-----+-----+-----+-----+-----+
+      |  10 |  20 |  30 |  ~  |  ~  |  ~  |  ~  |  ~  |
+      +-----+-----+-----+-----+-----+-----+-----+-----+
+       \_________ used ________/ \_______ free _______/
+
+add(40) → drop it in slot 3, size++        O(1), nothing shifts
+```
+
+- **Wall #1 still stands** — `add(0, 5)` at the front slides every element, exactly like a plain array.
+- **Wall #3 — running out of room means copying everything:**
+
+```
+capacity 4, size 4 — FULL
+      +-----+-----+-----+-----+
+      |  10 |  20 |  30 |  40 |
+      +-----+-----+-----+-----+
+             │  allocate 8 slots, COPY all 4  →  O(n) hitch
+             ▼
+      +-----+-----+-----+-----+-----+-----+-----+-----+
+      |  10 |  20 |  30 |  40 |  ~  |  ~  |  ~  |  ~  |   old block freed
+      +-----+-----+-----+-----+-----+-----+-----+-----+
+
+Because capacity DOUBLES (4 → 8 → 16 …), copies happen 1, 2, 4, 8 … times,
+so the cost SPREADS OUT: appends are only *amortized* O(1).
+```
+
+---
+
+### 3. Both walls break → that's what a linked list is for
+
+```
+   Array / ArrayList                    Linked List
+   = parked cars in a row               = cars joined by tow ropes
+
+   [10][20][30][40][50]                 (10) ─▶ (20) ─▶ (30) ─▶ (40)
+    ▲ to make room at the front           ▲ to make room at the front:
+      every car backs up                   untie one rope, move head — done
+```
+
+---
+
+### Which one should I pick?
+
+```
+          do you read a[i] by index a lot? / need max speed?
+                          │
+              ┌── yes ────┴──── no ────┐
+              ▼                         ▼
+      insert only at the end?    insert / delete often at
+              │                  the FRONT or MIDDLE?
+       ┌─ yes ┴─ no ─┐                │
+       ▼             ▼          ┌─ yes ┴─ no ─┐
+   plain array    ArrayList     ▼             ▼
+                  (plenty)      Linked List   ArrayList is plenty
+```
+
+**One-line rule:** arrays are for *looking things up*, linked lists are for *rewiring the order*.
+
+---
+
+### Cost at a glance
+
+`█` ≈ one unit of work — longer bar = slower
+
+```
+                        Array / ArrayList         Linked List
+read by index a[i]      ██  O(1)                  ██████████  O(n)
+insert at front         ██████████  O(n)          ██  O(1)
+insert at back          ██  O(1) *                ██████████  O(n)
+insert at position p    █████  O(p)               █████  O(p) once you arrive
+search / traverse       ██████████  O(n)          ██████████  O(n)
+reserve new memory      one contiguous block      never — nodes fit anywhere
+
+* amortized: a rare O(n) resize hides inside the average
+```
+
+### Array vs ArrayList vs Linked List
+
+| | Plain Array | ArrayList | Linked List |
+|---|---|---|---|
+| Memory | One contiguous block | One contiguous block | Scattered nodes, joined by references |
+| Size | Fixed at creation | Grows/shrinks at runtime | Grows/shrinks freely, one node at a time |
+| Access by index | O(1) | O(1) | O(n) — must walk from `head` |
+| Insert at front | O(n) — shift everything | O(n) — shift everything | **O(1)** — relink the head |
+| Insert in middle | O(n) — shift the tail | O(n) — shift the tail | **O(1)** — relink 2 references |
+| Insert at end | O(n) or fixed full | Amortized O(1) | O(n) — walk to the last node (no `tail` reference here) |
+| Growing | Impossible | Resize = copy the whole block | Allocate just the one node |
+| Wasted memory | None | `capacity − size` idle slots | One reference per node |
+| Cache behaviour | Excellent (contiguous) | Excellent (contiguous) | Poor (nodes scatter) |
+
+## Files
+
+The *why* is above. The *how* lives only in the code — every `.java` is self-contained (it redefines `Node` and its own helpers) and runs on its own.
+
+> **Note on `struct`:** `struct` is a C++ thing, **not Java**. C++ uses `struct Node` (or `class Node`) in these files; Java only has `class`, so every Node below is just a plain class.
+
+| # | File | Teaches | Cost |
+|---|------|---------|------|
+| 1 | [`BasicLinkedList.java`](BasicLinkedList.java) | Manual node creation and linking, the `Node` class, `this`, `null`, traversal, and why Java needs no `delete` cleanup loop (garbage collection) | one-time setup |
+| 2 | [`LinkedList.java`](LinkedList.java) | The practical approach: a `LinkedList` class with its own constructor (empty list), `add()` and `print()` methods, objects in `main` | append O(n) |
+| 3 | [`Insertion/InsertAtFirst.java`](Insertion/InsertAtFirst.java) | Node anatomy, `head`, `new`, returning the updated head (Java's stand-in for C++'s `Node *&head`), traversal | O(1) |
+| 4 | [`Insertion/InsertAtLast.java`](Insertion/InsertAtLast.java) | Empty-list branch, walking to the last node | O(n) |
+| 5 | [`Insertion/InsertAtPos.java`](Insertion/InsertAtPos.java) | 1-indexed positions, bounds checking, splicing | O(pos) |
+| 6 | [`Deletion/delAtBegin.java`](Deletion/delAtBegin.java) | Delete at the front: empty-list guard, move `head` forward **first**, then let the old node go (C++ would `delete` it — Java's garbage collector does that for you) | O(1) |
+| 7 | [`Deletion/delAtLast.java`](Deletion/delAtLast.java) | Delete at the end: the three cases (empty, one node, two or more), stopping at the second-to-last node | O(n) |
+| 8 | [`Deletion/delAtPos.java`](Deletion/delAtPos.java) | Delete at a position: walking to the node *before* the target, unlinking it | O(pos) |
+
+**Read them in that order** — files 3–8 only comment what is *new*; anything already covered earlier is left uncommented afterwards. File 6 reuses the ideas from file 1.
+
+> The duplicated setup across files is intentional for standalone running, not a pattern to copy into real projects.
+
+## Output
+
+Real console output of every file (the files that document it inline repeat it in a comment block at the end):
+
+**`BasicLinkedList.java`**
+```
+1->2->3->Null
+```
+
+**`LinkedList.java`**
+```
+1->2->3->4->5->Null
+2->Null
+```
+
+**`Insertion/InsertAtFirst.java`** — inserting 1..5 at the front reverses the order
+```
+Linked List: 5 -> 4 -> 3 -> 2 -> 1 -> NULL
+```
+
+**`Insertion/InsertAtLast.java`** — appending keeps the insertion order
+```
+Linked List: 1 -> 2 -> 3 -> 4 -> 5 -> NULL
+```
+
+**`Insertion/InsertAtPos.java`** — position 7 is past the end of a 5-node list
+```
+Position out of bounds!
+Linked List: 10 -> 20 -> 40 -> 30 -> 50 -> NULL
+```
+
+**`Deletion/delAtBegin.java`** — the list `1 2 3` loses its head
+```
+2->3->Null
+```
+
+**`Deletion/delAtLast.java`** — the list `1 2 3` loses its last node
+```
+1->2->Null
+```
+
+**`Deletion/delAtPos.java`** — the list `1 2 3` loses its middle node
+```
+1->3->Null
+```
+
+## Next Steps
+
+Once these are comfortable: **searching**, **reversing**, a **`tail` reference** (O(1) append), then a **doubly linked list** (`prev` in each node). Write them from scratch before looking up solutions.
