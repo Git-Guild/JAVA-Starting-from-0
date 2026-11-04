@@ -4,7 +4,7 @@ public class Factorial {
         if (n <= 1) {
             return 1;
         }
-        return n * factorial(n - 1);
+        return n * factorial(n - 1); //* direct recursive call = direct recursion
     }
     void main() {
         Scanner sc = new Scanner(System.in);
