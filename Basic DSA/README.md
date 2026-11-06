@@ -23,6 +23,8 @@ You should already be comfortable with (from the `Learning/` folder at the repo 
 
 **Note on `struct`:** `struct` is a C++ thing, **not Java**. C++ has both `struct` and `class`; Java only has `class`. Everywhere the C++ version of this folder uses `struct Node`, the Java version simply uses `class Node` — for a plain data holder like a node, a Java class does the exact same job.
 
+Want the full OOP treatment first (classes, references vs pointers, `static`, enums & records, exception handling)? That lives in the [`OOPM/`](../OOPM/README.md) folder — its `How Java Works.md` is the quickest way to understand why Java needs no `delete`.
+
 Language details that appear in these files (`null`, constructors, `new`) are explained **in place, once**, in the first file that uses them — later files don't repeat them. They're tools for building data structures, not separate topics in this folder.
 
 ## How to Run

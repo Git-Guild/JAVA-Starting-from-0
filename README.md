@@ -46,6 +46,17 @@ java Learning/Javac 25/Java25Tour.java
 See that folder's [README](Learning/Javac%2025/README.md) for the suggested
 order, a Java 25 feature cheat-sheet, and fixes for common errors.
 
+## 🧱 OOPM — Object-Oriented Programming in Depth
+
+[`OOPM/`](OOPM/README.md) is the full object-oriented phase: classes,
+constructors, encapsulation, polymorphism, abstraction, inheritance,
+`static`/`final`, enums & records, and exception handling with Java's complete
+`Throwable` hierarchy (checked vs unchecked, `finally`, try-with-resources).
+
+Start with [`OOPM/How Java Works.md`](OOPM/How%20Java%20Works.md) — the JVM,
+bytecode, memory model, and every C++ vs Java difference. Each phase folder has
+its own README carrying the theory, so the code files stay clean.
+
 ---
 
 ## 🎯 Who Is This For?

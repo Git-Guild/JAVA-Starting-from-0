@@ -60,6 +60,10 @@ Press Enter on an empty prompt to accept the default.
 
 Each file prints what to run next, so just follow the messages.
 
+For the theory behind the records and enums used in `ModernTypes.java`, see
+[`../../OOPM/Phase 3/`](../../OOPM/Phase%203/README.md) — this folder shows
+them in modern style, that folder explains them from the ground up.
+
 ## Why there is no `class` in these files
 
 Java 25 allows "compact source files". Instead of the old boilerplate:

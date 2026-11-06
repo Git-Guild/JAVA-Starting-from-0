@@ -69,9 +69,10 @@ After the lessons, these show one topic each in more depth:
 
 ### Then
 
-| Folder | What it is |
+| Folder | What it contains |
 |--------|------------|
 | [`Javac 25/`](Javac%2025/README.md) | Modern Java 25: no class boilerplate, records, virtual threads, and more |
+| [`../OOPM/`](../OOPM/README.md) | Full OOP phase: classes → exceptions, with C++ comparisons and a README per phase folder |
 
 ## Old style vs Java 25 style
 
